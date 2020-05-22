@@ -1,0 +1,126 @@
+leArquivos<-function(extencao, diretorio)
+  
+{
+  #arquivo<-NULL
+  arquivo <- matrix(nrow=1999,ncol=4097)
+  setwd(diretorio)
+  nomesArq = list.files(pattern=extencao)
+  
+  for(i in 1:1999){
+    temp<-nomesArq[i]
+    nomeArqSep<-unlist(strsplit(x = temp, split = ""))
+    categoria<-as.numeric(nomeArqSep[1], base = 0L) 
+    #categoria
+    
+    #categoria<-c("zero", "um", "dois","tres","quatro", "cinco", "seis", "sete", "oito", "nove")
+    #categoria[1]
+    
+    num<-read.csv(file = nomesArq[i], header = FALSE, sep = " ")
+    num<-num[-1,]
+    num<-num[-1,]
+    num<-num[-1,]
+    #num
+    num<-num[,-18]
+    
+    linha<-as.vector(t(num))
+    linha<-as.numeric(linha, base = 0L)
+    linha[4097] = categoria
+    #linha
+    
+    
+    colnames(linha) <- NULL
+    rownames(linha) <- NULL
+    
+    
+    if(length(linha) > 4097){#Identifica arquivo fora do padrão
+      print(nomesArq[i])
+    }else{
+      #arquivo <- InsertRow(arquivo, NewRow = linha, RowNum = i)
+      #arquivo<-rbind(arquivo, linha)
+      #arquivo<-rbind(arquivo, linha, make.row.names=FALSE)
+      arquivo[i,]<-linha
+    }
+    
+    
+  }
+  return(arquivo)
+}
+
+numeros<-NULL
+numeros<-leArquivos("*.pgm", "./digitos")
+
+#Impressao dos numeros------------------------------------------------------------
+mat<-matrix(numeros[75,-4097], byrow = TRUE, 64,64)#Transforma vetor em matriz
+image(mat, useRaster = TRUE, axes = FALSE)#Imprime conteudo da linha
+#---------------------------------------------------------------------------------
+
+
+numeros[33,]
+numeros
+
+
+#Algoritimo KNN-------------------------------------------------------------------
+set.seed(123)#Mesmo valor em cada execu??o, se o valor n?o for alterado
+
+indiceTreino<-sample(1:nrow(numeros), 0.8*nrow(numeros))#Pega elemetos aleatorios
+
+indiceTreino
+
+dadosTreino<-numeros[indiceTreino,]
+dadosTeste<-numeros[-indiceTreino,]
+dadosTreino
+dadosTeste
+
+table(dadosTreino[,4097])#Qtd elementos, por classe
+table(dadosTeste[,4097])
+
+dadosTreino
+dadosTeste
+
+especiesTreino<-dadosTreino[,4097]
+dadosTreino<-dadosTreino[,-4097]
+especiesTeste<-dadosTeste[,4097]
+dadosTeste<-dadosTeste[,-4097]
+
+especiesTreino
+especiesTeste
+dadosTreino
+dadosTeste
+
+#k = 5, 7, 13
+library(class)
+
+modelo<-knn(train = dadosTreino, test = dadosTeste, cl = especiesTreino, k = 29)#CL = classifica??o
+modelo
+
+summary(modelo)
+table(especiesTeste)
+
+table(modelo)
+table(especiesTeste)
+
+matrizConf<-table(especiesTeste, modelo)
+matrizConf
+diag(matrizConf)
+sum(diag(matrizConf))
+sum(matrizConf)
+
+sum(diag(matrizConf)/sum(matrizConf))
+mean(modelo == especiesTeste)
+
+calculaKN<-function(treino, test, espTreino, espTeste, vizinhos)
+{
+  for(i in 1: length(vizinhos))
+  {
+    modelo<-knn(train = treino, test = test, cl = espTreino, k = vizinhos[i])
+    matrizConf<-table(espTeste, modelo)
+    print(paste("k:", i))
+    
+    print(sum(diag(matrizConf)/sum(matrizConf)))
+  }
+}
+
+k<-c(1, 7, 13, 29)
+calculaKN(dadosTreino, dadosTeste, especiesTreino, especiesTeste, k)
+#---------------------------------------------------------------------------------
+

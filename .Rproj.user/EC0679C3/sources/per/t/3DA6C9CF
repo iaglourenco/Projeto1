@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1589666688495.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1644196241",
+    "id" : "3DA6C9CF",
+    "lastKnownWriteTime" : 1589667210,
+    "last_content_update" : 1589667210139,
+    "path" : "~/Projeto1/Projeto1.R",
+    "project_path" : "Projeto1.R",
+    "properties" : {
+        "cursorPosition" : "51,0",
+        "scrollLine" : "23"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
